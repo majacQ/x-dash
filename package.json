@@ -6,6 +6,23 @@
     "npm": "8.1.4"
   },
   "scripts": {
+  <<<<<<< athloi-perf
+    "blueprint": "node private/scripts/blueprint.js",
+    "build-docs": "(cd web && npm run build)",
+    "build-only": "athloi run build",
+    "build-storybook": "build-storybook -o dist/storybook -s .storybook/static",
+    "build": "athloi run build --concurrency 3 && npm run build-storybook",
+    "clean": "git clean -fxdi",
+    "heroku-postbuild": "make install && npm run build",
+    "install-docs": "(cd web && npm install)",
+    "jest": "jest -c jest.config.js",
+    "lint": "eslint . --ext=js,jsx",
+    "postinstall": "athloi exec -- npm i --no-package-lock",
+    "prepare": "npx snyk protect || npx snyk protect -d || true",
+    "start-docs": "(cd web && npm start)",
+    "start-storybook": "start-storybook -p ${STORYBOOK_PORT:-9001} -s .storybook/static -h local.ft.com",
+    "test": "npm run lint && npm run jest"
+  =======
     "clean": "git clean -fxdi",
     "build": "athloi run build --concurrency 3 --preserve-order",
     "build-only": "athloi run build",
@@ -20,6 +37,7 @@
     "heroku-postbuild": "make install && npm run build",
     "prepare": "npx snyk protect || npx snyk protect -d || true",
     "preinstall": "[ \"$INIT_CWD\" != \"$PWD\" ] || npm_config_yes=true npx check-engine"
+  >>>>>>> main
   },
   "lint-staged": {
     "**/*.{ts,tsx,js,jsx}": [
