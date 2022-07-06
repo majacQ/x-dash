@@ -45,9 +45,12 @@ Feature             | Type   | Notes
 `postId`            | String | Deprecated - Unique id to reference the content
 `title`             | String | Title of the content
 `bodyHTML`          | String | Body of the content
+`byline`            | String | Byline for the post, sometimes used to render the author's name.
 `content`           | String | Deprecated - Body of the content
 `isBreakingNews`    | Bool   | When `true` displays "breaking news" tag
 `publishedDate`     | String | ISO timestamp of publish date
 `publishedTimestamp`| String | Deprecated - ISO timestamp of publish date
 `articleUrl`        | String | Url of the main article that includes this post
 `showShareButtons`  | Bool   | default: `false` - Shows social media share buttons when `true`
+`backToTop`                | String | Function   | Shows the back to top link at the bottom of posts and manages navigating to `selected top` with a javascript function or a hashed href (string). If this prop is a string it will rely on standard browser behaviour to navigate to the element `id` provided that represents the top. If this prop is a function then that function should control the experience of navigating/scrolling to the top position. When using a function please call event.preventDefault() at the top level.
+

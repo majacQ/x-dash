@@ -1,6 +1,12 @@
 {
+  "name": "x-dash",
   "private": true,
+  "volta": {
+    "node": "16.14.0",
+    "npm": "8.1.4"
+  },
   "scripts": {
+  <<<<<<< athloi-perf
     "blueprint": "node private/scripts/blueprint.js",
     "build-docs": "(cd web && npm run build)",
     "build-only": "athloi run build",
@@ -16,6 +22,22 @@
     "start-docs": "(cd web && npm start)",
     "start-storybook": "start-storybook -p ${STORYBOOK_PORT:-9001} -s .storybook/static -h local.ft.com",
     "test": "npm run lint && npm run jest"
+  =======
+    "clean": "git clean -fxdi",
+    "build": "athloi run build --concurrency 3 --preserve-order",
+    "build-only": "athloi run build",
+    "jest": "jest -c jest.config.js",
+    "test": "npm run lint && npm run jest",
+    "e2e": "cd e2e && ./node_modules/.bin/webpack && jest -c jest.e2e.config.js",
+    "lint": "eslint . --ext=js,jsx",
+    "blueprint": "node private/scripts/blueprint.js",
+    "start-storybook": "start-storybook -p ${STORYBOOK_PORT:-9001} -s .storybook/static -h local.ft.com",
+    "start-storybook:ci": "start-storybook -p ${STORYBOOK_PORT:-9001} -s .storybook/static -h local.ft.com --ci --smoke-test",
+    "deploy-storybook:ci": "storybook-to-ghpages --ci --source-branch=main",
+    "heroku-postbuild": "make install && npm run build",
+    "prepare": "npx snyk protect || npx snyk protect -d || true",
+    "preinstall": "[ \"$INIT_CWD\" != \"$PWD\" ] || npm_config_yes=true npx check-engine"
+  >>>>>>> main
   },
   "lint-staged": {
     "**/*.{ts,tsx,js,jsx}": [
@@ -23,32 +45,40 @@
       "eslint --fix"
     ]
   },
+  "storybook-deployer": {
+    "gitUsername": "next-team",
+    "gitEmail": "next.team@ft.com",
+    "commitMessage": "Deploy Storybook [skip ci]"
+  },
   "devDependencies": {
-    "@babel/core": "^7.4.5",
+    "@babel/core": "^7.17.4",
     "@financial-times/athloi": "^1.0.0-beta.26",
-    "@storybook/addon-essentials": "^6.1.8",
-    "@storybook/react": "^6.1.8",
+    "@storybook/addon-essentials": "^6.2.9",
+    "@storybook/react": "^6.2.9",
+    "@storybook/storybook-deployer": "^2.8.8",
     "@types/jest": "26.0.0",
     "@typescript-eslint/parser": "^3.0.0",
-    "babel-loader": "^8.0.4",
+    "babel-loader": "^8.2.3",
+    "check-engine": "^1.10.1",
     "copy-webpack-plugin": "^5.0.2",
     "core-js": "^3.7.0",
     "eslint": "^5.16.0",
     "eslint-config-prettier": "^5.0.0",
     "eslint-plugin-jest": "^22.6.4",
     "eslint-plugin-jsx-a11y": "^6.2.0",
-    "eslint-plugin-react": "^7.13.0",
+    "eslint-plugin-react": "7.28.0",
     "fetch-mock": "^7.3.3",
     "husky": "^4.0.0",
     "jest": "^24.8.0",
     "lint-staged": "^10.0.0",
-    "node-sass": "^4.12.0",
+    "node-fetch": "^2.3.0",
     "prettier": "^2.0.2",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-helmet": "^5.2.0",
     "react-test-renderer": "^16.8.6",
-    "sass-loader": "^7.1.0",
+    "sass": "^1.49.0",
+    "sass-loader": "^10.2.1",
     "snyk": "^1.168.0",
     "style-loader": "^0.23.1",
     "typescript": "^3.9.5",
@@ -68,6 +98,11 @@
   "workspaces": [
     "components/*",
     "packages/*",
-    "tools/*"
-  ]
+    "tools/*",
+    "e2e"
+  ],
+  "engines": {
+    "node": "14.x || 16.x",
+    "npm": "7.x || 8.x"
+  }
 }

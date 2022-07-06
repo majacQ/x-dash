@@ -17,6 +17,21 @@ module.exports = {
 			longUrl
 		}),
 
+	createESLink: (link) =>
+		dispatchEvent({
+			category: 'gift-link',
+			action: 'create',
+			linkType: 'enterpriseLink',
+			link
+		}),
+
+	initEnterpriseSharing: (status) =>
+		dispatchEvent({
+			category: 'gift-link',
+			action: 'open',
+			status
+		}),
+
 	copyLink: (linkType, link) =>
 		dispatchEvent({
 			category: 'gift-link',

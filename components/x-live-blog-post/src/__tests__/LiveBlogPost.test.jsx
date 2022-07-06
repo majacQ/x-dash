@@ -28,7 +28,7 @@ const breakingNewsSpark = {
 	title: 'Test',
 	byline: 'Test author',
 	bodyHTML: '<p>Test</p>',
-	publishedDate: new Date().toISOString(),
+	publishedTimestamp: new Date().toISOString(),
 	standout: {
 		breakingNews: true
 	},
@@ -41,10 +41,22 @@ const regularPostSpark = {
 	title: 'Test title',
 	byline: 'Test author',
 	bodyHTML: '<p><i>Test body</i></p>',
-	publishedDate: new Date().toISOString(),
+	publishedTimestamp: new Date().toISOString(),
 	isBreakingNews: false,
 	articleUrl: 'Https://www.ft.com',
 	showShareButtons: true
+}
+
+const backToTopPostSpark = {
+	id: '12345',
+	title: 'Test title',
+	byline: 'Test author',
+	bodyHTML: '<p><i>Test body</i></p>',
+	publishedTimestamp: new Date().toISOString(),
+	isBreakingNews: false,
+	articleUrl: 'Https://www.ft.com',
+	showShareButtons: true,
+	backToTop: () => {}
 }
 
 describe('x-live-blog-post', () => {
@@ -54,7 +66,7 @@ describe('x-live-blog-post', () => {
 				const liveBlogPost = mount(<LiveBlogPost {...regularPostSpark} />)
 
 				expect(liveBlogPost.html()).toContain('Test title')
-				expect(liveBlogPost.html()).toContain('</h1>')
+				expect(liveBlogPost.html()).toContain('</h2>')
 			})
 		})
 
@@ -68,7 +80,7 @@ describe('x-live-blog-post', () => {
 			it('skips rendering of the title', () => {
 				const liveBlogPost = mount(<LiveBlogPost {...postWithoutTitle} />)
 
-				expect(liveBlogPost.html()).not.toContain('</h1>')
+				expect(liveBlogPost.html()).not.toContain('</h2>')
 			})
 		})
 
@@ -107,6 +119,15 @@ describe('x-live-blog-post', () => {
 
 			expect(liveBlogPost.html()).toContain('<p><i>Test body</i></p>')
 		})
+
+		describe('Back to top post', () => {
+			it('renders back to top link', () => {
+				const liveBlogPost = mount(<LiveBlogPost {...backToTopPostSpark} />)
+
+				expect(liveBlogPost.html()).toContain('Back to top')
+				expect(liveBlogPost.html()).toContain('</a>')
+			})
+		})
 	})
 
 	describe('Wordpress cms', () => {
@@ -115,7 +136,7 @@ describe('x-live-blog-post', () => {
 				const liveBlogPost = mount(<LiveBlogPost {...regularPostWordpress} />)
 
 				expect(liveBlogPost.html()).toContain('Test title')
-				expect(liveBlogPost.html()).toContain('</h1>')
+				expect(liveBlogPost.html()).toContain('</h2>')
 			})
 		})
 
@@ -129,7 +150,7 @@ describe('x-live-blog-post', () => {
 			it('skips rendering of the title', () => {
 				const liveBlogPost = mount(<LiveBlogPost {...postWithoutTitle} />)
 
-				expect(liveBlogPost.html()).not.toContain('</h1>')
+				expect(liveBlogPost.html()).not.toContain('</h2>')
 			})
 		})
 

@@ -1,12 +1,5 @@
 import { h } from '@financial-times/x-engine'
 import { ShareType } from './lib/constants'
-import styles from './GiftArticle.scss'
-
-const ButtonsClassName = styles.buttons
-
-const ButtonClassNames = styles['buttonBaseStyle']
-
-const ButtonWithGapClassNames = [ButtonClassNames, 'js-copy-link', styles['button--with-gap']].join(' ')
 
 export default ({
 	shareType,
@@ -20,8 +13,12 @@ export default ({
 	if (isGiftUrlCreated || shareType === ShareType.nonGift) {
 		if (nativeShare) {
 			return (
-				<div className={ButtonsClassName}>
-					<button className={ButtonWithGapClassNames} type="button" onClick={actions.shareByNativeShare}>
+				<div className="x-gift-article__buttons">
+					<button
+						className="js-copy-link x-gift-article__button x-gift-article-button--gap"
+						type="button"
+						onClick={actions.shareByNativeShare}
+					>
 						Share link
 					</button>
 				</div>
@@ -29,36 +26,51 @@ export default ({
 		}
 
 		return (
-			<div className={ButtonsClassName}>
+			<div className="x-gift-article__buttons">
 				{showCopyButton && (
 					<button
-						className={ButtonWithGapClassNames}
+						className="js-copy-link x-gift-article__button x-gift-article-button--gap"
 						type="button"
-						onClick={shareType === ShareType.gift ? actions.copyGiftUrl : actions.copyNonGiftUrl}
-						aria-label="Copy the gift article link to your clipboard">
+						onClick={
+							shareType === ShareType.gift
+								? actions.copyGiftUrl
+								: shareType === ShareType.enterprise
+								? actions.copyEnterpriseUrl
+								: actions.copyNonGiftUrl
+						}
+						aria-label="Copy the gift article link to your clipboard"
+					>
 						Copy link
 					</button>
 				)}
 				<a
-					className={ButtonClassNames}
+					className="x-gift-article__button"
 					href={mailtoUrl}
 					target="_blank"
 					rel="noopener noreferrer"
-					onClick={shareType === ShareType.gift ? actions.emailGiftUrl : actions.emailNonGiftUrl}>
-					Email link <span className={styles['visually-hidden']}>to Share this article</span>
+					onClick={
+						shareType === ShareType.gift
+							? actions.emailGiftUrl
+							: shareType === ShareType.enterprise
+							? actions.emailEnterpriseUrl
+							: actions.emailNonGiftUrl
+					}
+				>
+					Email link <span className="x-gift-article--visually-hidden">to Share this article</span>
 				</a>
 			</div>
 		)
 	}
 
 	return (
-		<div className={ButtonsClassName}>
+		<div className="x-gift-article__buttons">
 			<button
-				className={ButtonClassNames}
+				className="x-gift-article__button"
 				disabled={!giftCredits}
 				type="button"
-				onClick={actions.createGiftUrl}>
-				Create gift link
+				onClick={shareType === ShareType.enterprise ? actions.createEnterpriseUrl : actions.createGiftUrl}
+			>
+				Create {shareType === ShareType.enterprise ? 'enterprise' : 'gift'} link
 			</button>
 		</div>
 	)

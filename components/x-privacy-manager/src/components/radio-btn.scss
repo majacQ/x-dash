@@ -1,19 +1,19 @@
-@import 'o-colors/main';
-@import 'o-grid/main';
-@import 'o-normalise/main';
-@import 'o-spacing/main';
-@import 'o-typography/main';
+@import '@financial-times/o-colors/main';
+@import '@financial-times/o-grid/main';
+@import '@financial-times/o-normalise/main';
+@import '@financial-times/o-spacing/main';
+@import '@financial-times/o-typography/main';
 
 $transitionDuration: 0.1s;
 
-.input {
+.x-privacy-manager-radio-button__input {
 	@include oNormaliseVisuallyHidden;
 }
 
-.control {
+.x-privacy-manager-radio-button {
 	flex: 1;
 
-	& + .control {
+	& + .x-privacy-manager-radio-button {
 		margin-top: oSpacingByName(s4);
 
 		@include oGridRespondTo($from: S) {
@@ -23,7 +23,7 @@ $transitionDuration: 0.1s;
 	}
 }
 
-.label {
+.x-privacy-manager-label {
 	transition: background-color, color;
 	transition-duration: $transitionDuration;
 
@@ -38,16 +38,16 @@ $transitionDuration: 0.1s;
 	cursor: pointer;
 	background-color: oColorsByName('white');
 
-	.input:checked + & {
+	.x-privacy-manager-radio-button__input:checked + & {
 		background-color: oColorsByName('teal');
 		color: oColorsByName('white');
 	}
-	
+
 	// Since <input> itself is hidden, apply a familiar focus style to the visible <label>
 	// As adjacent siblings we can reflect the <input>'s focus state here
-	.input:focus + & {
-		outline: 2px solid #7aacfe;
-		outline: 5px auto -webkit-focus-ring-color;
+	.x-privacy-manager-radio-button__input:focus + & {
+		outline: 2px solid oColorsByName('teal-40');
+		outline-offset: 3px;
 		background-color: oColorsByName('teal-40');
 	}
 
@@ -57,8 +57,7 @@ $transitionDuration: 0.1s;
 	}
 }
 
-
-.label__text {
+.x-privacy-manager-label__text {
 	flex: 1;
 
 	margin-right: oSpacingByName(s2);
@@ -68,41 +67,41 @@ $transitionDuration: 0.1s;
 		font-size: 1.2rem;
 		font-weight: 600;
 	}
-	
+
 	& > span {
 		display: block;
 		margin-top: oSpacingByName(s1);
 	}
 }
 
-.label__icon {
+.x-privacy-manager-label__icon {
 	$icon-size: 28px;
 	width: $icon-size;
 	height: $icon-size;
 }
 
-.label__icon__outer {
+.x-privacy-manager-label__icon-outer {
 	transition: stroke $transitionDuration;
 
 	stroke: currentColor;
 	stroke-width: 3px;
 	fill: transparent;
 
-	.input:not(:checked) + .label:hover & {
+	.x-privacy-manager-radio-button__input:not(:checked) + .x-privacy-manager-label:hover & {
 		stroke: oColorsByName('teal-40');
 	}
 }
 
-.label__icon__inner {
+.x-privacy-manager-label__icon-inner {
 	transition: fill $transitionDuration;
 
 	fill: transparent;
 
-	.input:not(:checked) + .label:hover & {
+	.x-privacy-manager-radio-button__input:not(:checked) + .x-privacy-manager-label:hover & {
 		fill: oColorsByName('teal-40');
 	}
 
-	.input:checked + .label & {
+	.x-privacy-manager-radio-button__input:checked + .x-privacy-manager-label & {
 		fill: currentColor;
 	}
 }

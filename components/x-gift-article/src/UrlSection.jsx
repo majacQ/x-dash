@@ -3,9 +3,6 @@ import { ShareType } from './lib/constants'
 import Url from './Url'
 import Message from './Message'
 import Buttons from './Buttons'
-import styles from './GiftArticle.scss'
-
-const urlSectionClassNames = ['js-gift-article__url-section', styles['url-section']].join(' ')
 
 export default ({
 	shareType,
@@ -21,16 +18,24 @@ export default ({
 	showCopyButton,
 	nativeShare,
 	invalidResponseFromApi,
-	actions
+	isArticleSharingUxUpdates,
+	actions,
+	enterpriseLimit,
+	enterpriseHasCredits,
+	enterpriseRequestAccess,
+	enterpriseFirstTimeUser
 }) => {
-	const hideUrlShareElements = giftCredits === 0 && shareType === ShareType.gift
+	const hideUrlShareElements =
+		(giftCredits === 0 && shareType === ShareType.gift) ||
+		((enterpriseRequestAccess || !enterpriseHasCredits) && shareType === ShareType.enterprise)
 	const showUrlShareElements = !hideUrlShareElements
 
 	return (
 		<div
-			className={urlSectionClassNames}
+			className="js-gift-article__url-section x-gift-article__url-section"
 			data-section-id={shareType + 'Link'}
-			data-trackable={shareType + 'Link'}>
+			data-trackable={shareType + 'Link'}
+		>
 			{showUrlShareElements && (
 				<Url
 					{...{
@@ -51,7 +56,12 @@ export default ({
 					monthlyAllowance,
 					nextRenewalDateText,
 					redemptionLimit,
-					invalidResponseFromApi
+					invalidResponseFromApi,
+					isArticleSharingUxUpdates,
+					enterpriseHasCredits,
+					enterpriseLimit,
+					enterpriseRequestAccess,
+					enterpriseFirstTimeUser
 				}}
 			/>
 

@@ -1,0 +1,51 @@
+{
+  "name": "x-dash-e2e",
+  "version": "0.0.0",
+  "private": "true",
+  "description": "This module enables you to write x-dash components that respond to events and change their own data.",
+  "keywords": [
+    "x-dash"
+  ],
+  "author": "",
+  "license": "ISC",
+  "x-dash": {
+    "engine": {
+      "server": {
+        "runtime": "react",
+        "factory": "createElement",
+        "component": "Component",
+        "fragment": "Fragment",
+        "renderModule": "react-dom/server",
+        "render": "renderToStaticMarkup"
+      },
+      "browser": "react"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Financial-Times/x-dash.git"
+  },
+  "engines": {
+    "node": "14.x || 16.x",
+    "npm": "7.x || 8.x"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "@financial-times/x-engine": "file:../packages/x-engine",
+    "@financial-times/x-interaction": "file:../components/x-interaction",
+    "check-engine": "^1.10.1",
+    "puppeteer": "^10.4.0",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "webpack": "^4.46.0",
+    "webpack-cli": "^4.8.0"
+  },
+  "scripts": {
+    "preinstall": "[ \"$INIT_CWD\" != \"$PWD\" ] || npm_config_yes=true npx check-engine"
+  },
+  "volta": {
+    "extends": "../package.json"
+  }
+}

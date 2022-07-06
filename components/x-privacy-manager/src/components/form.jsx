@@ -1,11 +1,10 @@
 import { h } from '@financial-times/x-engine'
-import s from '../privacy-manager.scss'
 
 /**
- * @param {import('../../typings/x-privacy-manager').FormProps} args
+ * @param {XPrivacyManager.FormProps} args
  */
 export const Form = ({ consent, consentApiUrl, sendConsent, trackingKeys, buttonText, children }) => {
-	/** @type {import('../../typings/x-privacy-manager').TrackingKey} */
+	/** @type {XPrivacyManager.TrackingKey} */
 	const consentAction = consent ? 'consent-allow' : 'consent-block'
 	const btnTrackingId = trackingKeys[consentAction]
 	const isDisabled = typeof consent === 'undefined'
@@ -17,9 +16,14 @@ export const Form = ({ consent, consentApiUrl, sendConsent, trackingKeys, button
 	}
 
 	return (
-		<form action={consentApiUrl} onSubmit={onSubmit}>
-			<div className={s.form__controls}>{children}</div>
-			<button className={s.form__submit} type="submit" data-trackable={btnTrackingId} disabled={isDisabled}>
+		<form className="x-privacy-manager-form" action={consentApiUrl} onSubmit={onSubmit}>
+			<div className="x-privacy-manager-form__controls">{children}</div>
+			<button
+				className="x-privacy-manager-form__submit"
+				type="submit"
+				data-trackable={btnTrackingId}
+				disabled={isDisabled}
+			>
 				{buttonText.submit.label}
 			</button>
 		</form>

@@ -111,6 +111,9 @@ export const Greeting = greetingActions(BaseGreeting);
 
 ### Hydrating server-rendered markup
 
+[Hydration](https://en.wikipedia.org/wiki/Hydration_(web_development)#:~:text=In%20web%20development%2C%20hydration%20or,handlers%20to%20the%20HTML%20elements.
+): a technique in which client-side JavaScript converts a static HTML web page done by server-side rendering, into a dynamic web page by attaching event handlers to the HTML elements.
+
 When you have an `x-interaction` component rendered by the server, and you want to attach the client-side version of the component to handle the actions, rather than rendering the component manually (which might become unwieldy, especially if you have many components & instances on the page), you can have `x-interaction` manage it for you.
 
 There are three parts to this: registering the component, serialising and hydrating.
@@ -176,7 +179,7 @@ When rendered on the server side, components output an extra wrapper element, wi
 
 `x-interaction` exports a function `hydrate`. This should be called on the client side. It inspects the global serialisation data on the page, uses the identifiers to find the wrapper elements, and calls `render` from your chosen `x-engine` client-side runtime to render component instances into the wrappers.
 
-Before calling `hydrate`, you must first `import` any `x-interaction` components that will be rendered on the page. The components register themselves with the `x-interaction` runtime when imported; you don't need to do anything with the imported component. This will also ensure the component is included in your client-side bundle.
+Before calling `hydrate`, you must first `import` any `x-interaction` components that will be rendered on the page. The components register themselves with the `x-interaction` runtime when imported; you don't need to do anything with the imported component. This will also ensure the component is included in your client-side bundle. Similarly if the component that you're server side rendering is just a component that you've created through `withActions`, make sure you import that component along with its registerComponent invokation.
 
 Because `hydrate` expects the wrappers to be present in the DOM when called, it should be called after [`DOMContentLoaded`](https://developer.mozilla.org/en-US/docs/Web/Events/DOMContentLoaded). Depending on your page structure, it might be appropriate to hydrate the component when it's scrolled into view.
 

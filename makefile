@@ -7,7 +7,12 @@ clean:
 	npm run clean
 
 install:
+  <<<<<<< athloi-perf
 	npm i --no-package-lock
+  =======
+	npm i --no-package-lock --no-workspaces
+	npx athloi exec -- npm i --no-package-lock --no-workspaces
+  >>>>>>> main
 
 build:
 	npm run build

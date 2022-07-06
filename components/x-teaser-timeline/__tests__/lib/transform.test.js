@@ -1,4 +1,4 @@
-import { buildModel } from '../../src/lib/transform'
+import { interleaveAllSlotsWithCustomSlots, buildModel } from '../../src/lib/transform'
 
 const items = [
 	{
@@ -298,5 +298,125 @@ describe('buildModel', () => {
 				groupedItems[2]
 			])
 		})
+		test('returns correct model for multiple custom slots', () => {
+			const result = buildModel({
+				items,
+				timezoneOffset: 0,
+				localTodayDate: '2020-01-14',
+				customSlotContent: [{ foo: 1 }, { bar: 2 }],
+				customSlotPosition: [0, 3]
+			})
+			expect(result).toEqual([
+				{
+					...groupedItems[0],
+					items: [
+						{ foo: 1 },
+						groupedItems[0].items[0],
+						groupedItems[0].items[1],
+						groupedItems[0].items[2],
+						{ bar: 2 },
+						groupedItems[0].items[3]
+					]
+				},
+				groupedItems[1],
+				groupedItems[2]
+			])
+		})
+		test('returns correct model for a non-zero custom slot', () => {
+			const result = buildModel({
+				items,
+				timezoneOffset: 0,
+				localTodayDate: '2020-01-14',
+				customSlotContent: [{ foo: 1 }, { bar: 2 }],
+				customSlotPosition: [2, 3]
+			})
+			expect(result).toEqual([
+				{
+					...groupedItems[0],
+					items: [
+						groupedItems[0].items[0],
+						groupedItems[0].items[1],
+						{ foo: 1 },
+						groupedItems[0].items[2],
+						{ bar: 2 },
+						groupedItems[0].items[3]
+					]
+				},
+				groupedItems[1],
+				groupedItems[2]
+			])
+		})
+		test('returns correct model for multiple custom slots off end of all groups', () => {
+			const result = buildModel({
+				items,
+				timezoneOffset: 0,
+				localTodayDate: '2020-01-14',
+				customSlotContent: [{ foo: 1 }, { bar: 2 }],
+				customSlotPosition: [0, 10]
+			})
+			expect(result).toEqual([
+				{
+					...groupedItems[0],
+					items: [
+						{ foo: 1 },
+						groupedItems[0].items[0],
+						groupedItems[0].items[1],
+						groupedItems[0].items[2],
+						groupedItems[0].items[3]
+					]
+				},
+				groupedItems[1],
+				{
+					...groupedItems[2],
+					items: [...groupedItems[2].items, { bar: 2 }]
+				}
+			])
+		})
+	})
+})
+
+describe('interleaveAllSlotsWithCustomSlots', () => {
+	test('inserts custom slots in group-article indexes', () => {
+		const customSlotContent = [{ foo: 1 }, { bar: 2 }]
+		const customSlotPosition = [0, 10]
+
+		const interleavedGroupedItems = interleaveAllSlotsWithCustomSlots(
+			customSlotContent,
+			customSlotPosition,
+			groupedItems,
+			items
+		)
+
+		expect(interleavedGroupedItems).toEqual([
+			{
+				...groupedItems[0],
+				items: [
+					{ foo: 1 },
+					groupedItems[0].items[0],
+					groupedItems[0].items[1],
+					groupedItems[0].items[2],
+					groupedItems[0].items[3]
+				]
+			},
+			groupedItems[1],
+			{
+				...groupedItems[2],
+				items: [...groupedItems[2].items, { bar: 2 }]
+			}
+		])
+	})
+
+	test('does not insert custom slots in out-of-bound group-article indexes', () => {
+		const customSlotContent = [{ foo: 1 }, { bar: 2 }]
+		const customSlotPosition = [-5, 15]
+
+		const interleavedGroupedItems = interleaveAllSlotsWithCustomSlots(
+			customSlotContent,
+			customSlotPosition,
+			groupedItems,
+			items
+		)
+
+		expect(groupedItems).toEqual(interleavedGroupedItems)
 	})
 })

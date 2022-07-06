@@ -5,7 +5,6 @@ import { Form } from './components/form'
 import { RadioBtn } from './components/radio-btn'
 import { withCustomActions } from './actions'
 import * as utils from './utils'
-import s from './privacy-manager.scss'
 
 const defaultButtonText = {
 	allow: { label: 'Allow', text: 'See personalised adverts' },
@@ -14,11 +13,11 @@ const defaultButtonText = {
 }
 
 /**
- * @param {import('../typings/x-privacy-manager').BasePrivacyManagerProps} Props
+ * @param {XPrivacyManager.BasePrivacyManagerProps} Props
  */
 export function BasePrivacyManager({
 	userId,
-	referrer,
+	redirectUrl,
 	legislationId,
 	cookiesOnly,
 	cookieDomain,
@@ -59,7 +58,7 @@ export function BasePrivacyManager({
 		onChange: onConsentChange
 	})
 
-	/** @type {import('../typings/x-privacy-manager').FormProps} */
+	/** @type {XPrivacyManager.FormProps} */
 	const formProps = {
 		consent,
 		consentApiUrl,
@@ -67,6 +66,7 @@ export function BasePrivacyManager({
 		buttonText,
 		sendConsent: () => {
 			return sendConsent({
+				setConsentCookie: legislationId === 'gdpr',
 				consentApiUrl,
 				onConsentSavedCallbacks,
 				consentSource,
@@ -77,15 +77,15 @@ export function BasePrivacyManager({
 	}
 
 	return (
-		<div className={s.consent} data-component="x-privacy-manager">
+		<div className="x-privacy-manager" data-component="x-privacy-manager">
 			{renderLoggedOutWarning(userId, loginUrl)}
-			<div className={s.messages} aria-live="polite">
-				{renderMessage(isLoading, _response, referrer)}
-			</div>
 			<Form {...formProps}>
 				<RadioBtn {...radioBtnProps('allow', consent === true)} />
 				<RadioBtn {...radioBtnProps('block', consent === false)} type="block" checked={consent === false} />
 			</Form>
+			<div className="x-privacy-manager__messages" aria-live="polite">
+				{renderMessage(isLoading, _response, redirectUrl)}
+			</div>
 		</div>
 	)
 }

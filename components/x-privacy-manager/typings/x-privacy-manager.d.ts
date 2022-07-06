@@ -29,9 +29,10 @@ interface ConsentPayload {
   data: ConsentData
 }
 
-type OnSaveCallback = (err: null | Error, data: { consent: boolean; payload: ConsentPayload }) => void
+export type OnSaveCallback = (err: null | Error, data: { consent: boolean; payload: ConsentPayload }) => void
 
 export interface SendConsentProps {
+  setConsentCookie: boolean
   consentApiUrl: string
   onConsentSavedCallbacks: OnSaveCallback[]
   consentSource: string
@@ -66,7 +67,7 @@ export interface ButtonText {
 }
 
 export interface PrivacyManagerProps {
-  referrer?: string
+  redirectUrl?: string
   consent?: boolean
   cookiesOnly?: boolean
   cookieDomain?: string
@@ -96,3 +97,5 @@ export interface FormProps {
 }
 
 export { PrivacyManager } from '../src/privacy-manager'
+
+export as namespace XPrivacyManager

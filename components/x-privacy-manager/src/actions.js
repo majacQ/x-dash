@@ -9,10 +9,19 @@ function onConsentChange(consent) {
  * - consentSource: (e.g. 'next-control-centre')
  * - cookieDomain: (e.g. '.thebanker.com')
  *
- * @param {import("../types").SendConsentProps} args
+ * @param {XPrivacyManager.SendConsentProps} args
  * @returns {({ isLoading, consent }: { isLoading: boolean, consent: boolean }) => Promise<{_response: _Response}>}
  */
-function sendConsent({ consentApiUrl, onConsentSavedCallbacks, consentSource, cookieDomain, fow }) {
+function sendConsent({
+	setConsentCookie,
+	consentApiUrl,
+	onConsentSavedCallbacks,
+	consentSource,
+	cookieDomain,
+	fow
+}) {
+	let res
+
 	return async ({ isLoading, consent }) => {
 		if (isLoading) return
 
@@ -26,6 +35,7 @@ function sendConsent({ consentApiUrl, onConsentSavedCallbacks, consentSource, co
 		}
 
 		const payload = {
+			setConsentCookie,
 			formOfWordsId: fow.id,
 			consentSource,
 			data: {
@@ -41,7 +51,7 @@ function sendConsent({ consentApiUrl, onConsentSavedCallbacks, consentSource, co
 		}
 
 		try {
-			const res = await fetch(consentApiUrl, {
+			res = await fetch(consentApiUrl, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json'

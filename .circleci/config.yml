@@ -1,102 +1,95 @@
-version: 2
+version: 2.1
+
+orbs:
+  node: circleci/node@4.6.0
 
 references:
-
   #
   # Workspace
   #
-  container_config_node: &container_config_node
+  container_config_node:
+    &container_config_node
     working_directory: ~/project/build
     docker:
-      - image: circleci/node:12
+      - image: cimg/node:<< parameters.node-version >>-browsers
+    parameters:
+      node-version:
+        default: "16.14"
+        type: string
 
-  workspace_root: &workspace_root
-    ~/project
+  workspace_root: &workspace_root ~/project
 
-  attach_workspace: &attach_workspace
+  attach_workspace:
+    &attach_workspace
     attach_workspace:
       at: *workspace_root
 
-  #
   # Cache keys
   #
-  cache_keys_root: &cache_keys_root
+  cache_keys_root:
+    &cache_keys_root
     keys:
-      - cache-root-v4-{{ .Branch }}-{{ checksum "./package.json" }}
+      - cache-root-v6-{{ .Branch }}-{{ checksum "./package.json" }}
 
-  cache_keys_docs: &cache_keys_docs
-    keys:
-      - cache-docs-v4-{{ .Branch }}-{{ checksum "./web/package.json" }}
-
-  #
   # Cache creation
   #
-  create_cache_root: &create_cache_root
+  create_cache_root:
+    &create_cache_root
     save_cache:
-      key: cache-root-v4-{{ .Branch }}-{{ checksum "./package.json" }}
+      key: cache-root-v6-{{ .Branch }}-{{ checksum "./package.json" }}
       paths:
         - ./node_modules/
 
-  create_cache_docs: &create_cache_docs
-    save_cache:
-      key: cache-docs-v4-{{ .Branch }}-{{ checksum "./web/package.json" }}
-      paths:
-        - ./web/node_modules/
-
-  #
   # Cache restoration
   #
-  restore_cache_root: &restore_cache_root
+  restore_cache_root:
+    &restore_cache_root
     restore_cache:
       <<: *cache_keys_root
-
-  restore_cache_docs: &restore_cache_docs
-    restore_cache:
-      <<: *cache_keys_docs
 
   #
   # Filters
   #
 
-  filters_only_renovate_nori: &filters_only_renovate_nori
+  filters_only_renovate_nori:
+    &filters_only_renovate_nori
     branches:
       only: /(^renovate-.*|^nori\/.*)/
 
-  filters_ignore_tags_renovate_nori_build: &filters_ignore_tags_renovate_nori_build
+  filters_ignore_tags_renovate_nori_build:
+    &filters_ignore_tags_renovate_nori_build
     tags:
       ignore: /.*/
     branches:
       ignore: /(^renovate-.*|^nori\/.*|^gh-pages)/
 
-  filters_release_build: &filters_release_build
+  filters_release_build:
+    &filters_release_build
     tags:
       only:
         - /^v\d+\.\d+\.\d+(?:-\w+\.\d+)?$/
     branches:
       ignore: /.*/
 
-  filters_prerelease_build: &filters_prerelease_build
-    tags:
-      only:
-        - /^x-[a-z-]+-v0\.\d+\.\d+(-\w+\.\d+)?$/
-    branches:
-      ignore: /.*/
-
-  filters_only_main: &filters_only_main
+  filters_only_main:
+    &filters_only_main
     branches:
       only:
         - main
 
 jobs:
-
   build:
     <<: *container_config_node
     steps:
       - checkout
       - run:
           name: Checkout next-ci-shared-helpers
-          command: git clone --depth 1 git@github.com:Financial-Times/next-ci-shared-helpers.git .circleci/shared-helpers
+          command: git clone --depth 1
+            git@github.com:Financial-Times/next-ci-shared-helpers.git
+            .circleci/shared-helpers
       - *restore_cache_root
+      - node/install-npm:
+          version: '8'
       - run:
           name: Install project dependencies
           command: make install
@@ -116,6 +109,17 @@ jobs:
       - run:
           name: Run tests
           command: make test
+      - run:
+          name: Run storybook
+          command: npm run start-storybook:ci
+
+  e2e-test:
+    <<: *container_config_node
+    steps:
+      - *attach_workspace
+      - run:
+          name: Run end to end test
+          command: npm run e2e
 
   publish:
     <<: *container_config_node
@@ -131,51 +135,15 @@ jobs:
           name: NPM publish
           command: npx athloi publish -- --access=public
 
-  prerelease:
-    <<: *container_config_node
-    steps:
-      - *attach_workspace
-      - run:
-          name: shared-helper / npm-store-auth-token
-          command: .circleci/shared-helpers/helper-npm-store-auth-token
-      - run:
-          name: Extract tag name and version number
-          command: |
-            # https://circleci.com/docs/2.0/env-vars/#using-bash_env-to-set-environment-variables
-            export PRERELEASE_SEMVER='v0\.[0-9]{1,2}\.[0-9]{1,2}(-[a-z]+\.[0-9]+)?'
-            export TARGET_VERSION=$(echo $CIRCLE_TAG | grep -o -E $PRERELEASE_SEMVER);
-            export TARGET_MODULE=$(echo $CIRCLE_TAG | sed -E "s/-${PRERELEASE_SEMVER}//g");
-            echo "export TARGET_VERSION=$TARGET_VERSION" >> $BASH_ENV;
-            echo "export TARGET_MODULE=$TARGET_MODULE" >> $BASH_ENV;
-            echo "Creating prerelease ${TARGET_VERSION} for ${TARGET_MODULE}";
-      - run:
-          name: Bump version number
-          command: npx athloi -F ${TARGET_MODULE} version ${TARGET_VERSION};
-      - run:
-          name: NPM publish
-          command: npx athloi -F ${TARGET_MODULE} publish -- --access=public --tag=pre-release
-
   deploy:
     <<: *container_config_node
     steps:
       - *attach_workspace
-      - add_ssh_keys:
-          fingerprints:
-            - "2b:98:17:21:34:bf:5d:3b:15:a5:82:77:90:11:03:e9"
-      - *restore_cache_docs
       - run:
-          name: Install documentation website dependencies
-          command: npm run install-docs
-      - *create_cache_docs
-      - run:
-          name: Build documentation website
-          command: npm run build-docs
-      - run:
-          name: shared-helper / publish-github-pages
-          command: .circleci/shared-helpers/helper-publish-github-pages
+          name: Deploy Storybook
+          command: npm run deploy-storybook:ci
 
 workflows:
-
   version: 2
 
   build-test:
@@ -183,64 +151,80 @@ workflows:
       - build:
           filters:
             <<: *filters_ignore_tags_renovate_nori_build
+          name: build-v<< matrix.node-version >>
+          matrix:
+            parameters:
+              node-version: [ "16.14", "14.19" ]
       - test:
           requires:
-            - build
+            - build-v<< matrix.node-version >>
+          name: test-v<< matrix.node-version >>
+          matrix:
+            parameters:
+              node-version: [ "16.14", "14.19" ]
+      - e2e-test:
+          requires:
+            - build-v<< matrix.node-version >>
+          name: e2e-test-v<< matrix.node-version >>
+          matrix:
+            parameters:
+              node-version: [ "16.14", "14.19" ]
       - deploy:
           filters:
             <<: *filters_only_main
           requires:
-            - test
+            - test-v16.14
 
   renovate-nori-build-test:
     jobs:
       - waiting-for-approval:
           type: approval
           filters:
-              <<: *filters_only_renovate_nori
+            <<: *filters_only_renovate_nori
       - build:
           requires:
-              - waiting-for-approval
+            - waiting-for-approval
+          name: build-v<< matrix.node-version >>
+          matrix:
+            parameters:
+              node-version: [ "16.14", "14.19" ]
       - test:
           requires:
-              - build
+            - build-v<< matrix.node-version >>
+          name: test-v<< matrix.node-version >>
+          matrix:
+            parameters:
+              node-version: [ "16.14", "14.19" ]
 
   build-test-publish-deploy:
     jobs:
       - build:
           filters:
             <<: *filters_release_build
+          name: build-v<< matrix.node-version >>
+          matrix:
+            parameters:
+              node-version: [ "16.14", "14.19" ]
       - test:
           filters:
             <<: *filters_release_build
           requires:
-            - build
+            - build-v<< matrix.node-version >>
+          name: test-v<< matrix.node-version >>
+          matrix:
+            parameters:
+              node-version: [ "16.14", "14.19" ]
       - publish:
+          context: npm-publish-token
           filters:
             <<: *filters_release_build
           requires:
-            - test
+            - test-v16.14
       - deploy:
           filters:
             <<: *filters_release_build
           requires:
             - publish
-
-  build-test-prerelease:
-    jobs:
-      - build:
-          filters:
-            <<: *filters_prerelease_build
-      - test:
-          filters:
-            <<: *filters_prerelease_build
-          requires:
-            - build
-      - prerelease:
-          filters:
-            <<: *filters_prerelease_build
-          requires:
-            - test
 
 notify:
   webhooks:
