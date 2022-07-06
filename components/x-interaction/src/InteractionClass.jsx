@@ -1,6 +1,5 @@
 import { h, Component } from '@financial-times/x-engine';
 import { InteractionRender } from './InteractionRender';
-import { loading } from './concerns/symbols';
 import mapValues from './concerns/map-values';
 
 export class InteractionClass extends Component {
@@ -9,33 +8,56 @@ export class InteractionClass extends Component {
 
 		this.state = {
 			state: {},
-			[loading]: false,
+			inFlight: 0,
 		};
 
-		this.actions = mapValues(props.actions, (func) => (...args) => {
+		this.createActions(props);
+	}
+
+	createActions(props) {
+		this.actions = mapValues(props.actions, (func) => async (...args) => {
 			// mark as loading one microtask later. if the action is synchronous then
 			// setting loading back to false will happen in the same microtask and no
 			// additional render will be scheduled.
 			Promise.resolve().then(() => {
-				this.setState({ [loading]: true });
+				this.setState(({ inFlight }) => ({ inFlight: inFlight + 1 }));
 			});
 
-			return Promise.resolve(func(...args)).then((next) => {
-				const updater = typeof next === 'function'
-					? ({state}) => ({state: next(Object.assign(
+			const stateUpdate = await Promise.resolve(func(...args));
+
+			const nextState = typeof stateUpdate === 'function'
+				? Object.assign(
+					this.state.state,
+					await Promise.resolve(stateUpdate(Object.assign(
 						{},
 						props.initialState,
-						state
-					))})
-					: {state: next};
+						this.state.state
+					)))
+				)
+				: Object.assign(this.state.state, stateUpdate);
 
-				return new Promise(resolve =>
-					this.setState(updater, () => (
-						this.setState({ [loading]: false }, resolve)
-					))
-				);
-			});
+			return new Promise(resolve =>
+				this.setState({state: nextState}, () => (
+					this.setState(({ inFlight }) => ({ inFlight: inFlight - 1 }), resolve)
+				))
+			);
 		});
+	}
+
+	componentWillReceiveProps(props) {
+		this.createActions(props);
+	}
+
+	componentDidMount() {
+		if(this.props.actionsRef) {
+			this.props.actionsRef(this.actions);
+		}
+	}
+
+	componentWillUnmount() {
+		if(this.props.actionsRef) {
+			this.props.actionsRef(null);
+		}
 	}
 
 	render() {

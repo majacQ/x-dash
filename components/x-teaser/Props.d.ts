@@ -1,4 +1,4 @@
-export type ContentType = 'article' | 'video' | 'podcast' | 'package' | 'liveblog' | 'promoted-content' | 'paid-post';
+export type ContentType = 'article' | 'video' | 'podcast' | 'audio' | 'package' | 'liveblog' | 'promoted-content' | 'paid-post';
 
 /** Strings must be a parseable format, e.g. ISO 8601 */
 export type DateLike = Date | string | number;
@@ -12,20 +12,20 @@ export type Modifier = 'stacked' | 'centre' | 'stretched' | 'opinion-background'
 export type ImageSize = 'XS' | 'Small' | 'Medium' | 'Large' | 'XL' | 'XXL';
 
 export interface Features {
-	showMeta: boolean;
-	showTitle: boolean;
-	showStandfirst: boolean;
-	showStatus: boolean;
-	showImage: boolean;
-	showHeadshot: boolean;
-	showVideo: boolean;
-	showRelatedLinks: boolean;
-	showCustomSlot: boolean;
+	showMeta?: boolean;
+	showTitle?: boolean;
+	showStandfirst?: boolean;
+	showStatus?: boolean;
+	showImage?: boolean;
+	showHeadshot?: boolean;
+	showVideo?: boolean;
+	showRelatedLinks?: boolean;
+	showCustomSlot?: boolean;
 }
 
 export interface General {
 	id: string;
-	url: string;
+	url?: string;
 	/** Preferred to url if available */
 	relativeUrl?: string;
 	type: ContentType;
@@ -133,6 +133,7 @@ export interface Indicators {
 	accessLevel: 'premium' | 'subscribed' | 'registered' | 'free';
 	isOpinion?: boolean;
 	isColumn?: boolean;
+	isPodcast?: boolean;
 	/** Methode packaging options */
 	isEditorsChoice?: boolean;
 	isExclusive?: boolean;

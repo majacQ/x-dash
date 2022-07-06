@@ -2,6 +2,30 @@
 
 ## v1
 
+### v1.0.0-beta.9
+
+- Refactors x-teaser to make the teaser standfirst a link (#268)
+
+### v1.0.0-beta.8
+
+- Updates x-teaser for cross-compatibility with o-teaser v2 and v3 (#256)
+
+### v1.0.0-beta.7
+
+- Added new x-node-jsx package to enable direct usage of .jsx files (#217)
+
+### v1.0.0-beta.6
+
+- Refactors wrapping logic to enable re-wrapping a component with x-interaction (#214)
+
+### v1.0.0-beta.5
+
+- Adds audio to ContentTypes type in TypeScript declaration file in x-teaser (#209)
+
+### v1.0.0-beta.4
+
+- Add support for an isPodcast identifier to x-teaser (#211)
+
 ### v1.0.0-beta.3
 
 - Removes whitespace output around text output in x-teaser (#146)
