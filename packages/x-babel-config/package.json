@@ -11,6 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+  <<<<<<< directory
     "babel-jest": "^23.6.0",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-plugin-transform-react-jsx": "^6.24.1",
@@ -21,5 +22,11 @@
     "type": "git",
     "url": "https://github.com/Financial-Times/x-dash.git",
     "directory": "packages/x-babel-config"
+  =======
+    "@babel/plugin-transform-react-jsx": "^7.3.0",
+    "@babel/preset-env": "^7.4.3",
+    "babel-jest": "^24.0.0",
+    "fast-async": "^7.0.6"
+  >>>>>>> duplicated-actions
   }
 }
