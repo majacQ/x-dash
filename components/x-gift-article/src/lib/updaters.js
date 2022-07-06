@@ -1,59 +1,89 @@
-import { createMailtoUrl } from './share-link-actions';
-import { ShareType, UrlType } from './constants';
+import { createMailtoUrl } from './share-link-actions'
+import { ShareType, UrlType } from './constants'
 
-const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+export const monthNames = [
+	'January',
+	'February',
+	'March',
+	'April',
+	'May',
+	'June',
+	'July',
+	'August',
+	'September',
+	'October',
+	'November',
+	'December'
+]
 
 export const showGiftUrlSection = (props) => ({
 	shareType: ShareType.gift,
 	url: props.urls.gift || props.urls.dummy,
 	urlType: props.urls.gift ? UrlType.gift : UrlType.dummy,
 	mailtoUrl: props.mailtoUrls.gift,
-	showCopyConfirmation: false
-});
+	isGiftUrlCreated: !!props.urls.gift,
+	showCopyConfirmation: false,
+	invalidResponseFromApi: false
+})
+
+export const showGiftEnterpriseSection = (props) => ({
+	shareType: ShareType.enterprise,
+	url: props.urls.enterprise || props.urls.dummy,
+	urlType: props.urls.enterprise ? UrlType.gift : UrlType.dummy,
+	mailtoUrl: props.mailtoUrls.enterprise,
+	isGiftUrlCreated: !!props.urls.enterprise,
+	showCopyConfirmation: false,
+	invalidResponseFromApi: false
+})
 
 export const showNonGiftUrlSection = (props) => ({
 	shareType: ShareType.nonGift,
 	url: props.urls.nonGift,
 	urlType: UrlType.nonGift,
 	mailtoUrl: props.mailtoUrls.nonGift,
-	showCopyConfirmation: false
-});
+	isGiftUrlCreated: false,
+	showCopyConfirmation: false,
+	invalidResponseFromApi: false
+})
 
-export const setGiftUrl = (url, redemptionLimit, isShortened) => props => {
-	const mailtoUrl = createMailtoUrl(props.article.title, url);
+export const setGiftUrl =
+	(url, redemptionLimit, isShortened, isEnterprise = false) =>
+	(props) => {
+		const mailtoUrl = createMailtoUrl(props.article.title, url)
 
-	return {
-		url,
-		mailtoUrl,
-		redemptionLimit,
-		isGiftUrlCreated: true,
-		isGiftUrlShortened: isShortened,
-		urlType: UrlType.gift,
+		return {
+			url,
+			mailtoUrl,
+			redemptionLimit: isEnterprise ? props.redemptionLimit : redemptionLimit, //note: when creating an enterprise link we do not change the redemption limit (this value is only used in the gift message)
+			isGiftUrlCreated: true,
+			isGiftUrlShortened: isShortened,
+			urlType: isEnterprise ? UrlType.enterprise : UrlType.gift,
 
-		urls: Object.assign(props.urls, {
-			gift: url,
-		}),
+			urls: Object.assign(props.urls, {
+				[isEnterprise ? 'enterprise' : 'gift']: url
+			}),
 
-		mailtoUrls: Object.assign(props.mailtoUrls, {
-			gift: mailtoUrl,
-		})
-	};
-};
+			mailtoUrls: Object.assign(props.mailtoUrls, {
+				[isEnterprise ? 'enterprise' : 'gift']: mailtoUrl
+			}),
+			invalidResponseFromApi: false
+		}
+	}
 
 export const setAllowance = (giftCredits, monthlyAllowance, nextRenewalDate) => {
-	const date = new Date(nextRenewalDate);
-	const nextRenewalDateText = `${ monthNames[date.getMonth()] } ${ date.getDate() }`;
+	const date = new Date(nextRenewalDate)
+	const nextRenewalDateText = `${monthNames[date.getMonth()]} ${date.getDate()}`
 
 	return {
 		giftCredits,
 		monthlyAllowance,
 		nextRenewalDateText,
 		invalidResponseFromApi: false
-	};
-};
+	}
+}
 
-export const setShortenedNonGiftUrl = (shortenedUrl) => props => {
-	const mailtoUrl = createMailtoUrl(props.article.title, shortenedUrl);
+export const setShortenedNonGiftUrl = (shortenedUrl) => (props) => {
+	const mailtoUrl = createMailtoUrl(props.article.title, shortenedUrl)
 
 	return {
 		url: shortenedUrl,
@@ -61,11 +91,15 @@ export const setShortenedNonGiftUrl = (shortenedUrl) => props => {
 		isNonGiftUrlShortened: true,
 
 		urls: Object.assign(props.urls, {
-			gift: shortenedUrl,
+			nonGift: shortenedUrl
 		}),
 
 		mailtoUrls: Object.assign(props.mailtoUrls, {
-			gift: mailtoUrl,
+			nonGift: mailtoUrl
 		})
-	};
-};
+	}
+}
+
+export const setErrorState = (errorState) => ({
+	invalidResponseFromApi: errorState
+})

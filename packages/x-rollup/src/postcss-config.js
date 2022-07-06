@@ -1,4 +1,4 @@
-const path = require('path');
+const path = require('path')
 
 module.exports = (style) => {
 	return {
@@ -8,11 +8,11 @@ module.exports = (style) => {
 			[
 				'sass',
 				{
-					includePaths: [path.resolve(process.cwd(), 'bower_components')]
+					includePaths: [path.resolve(process.cwd(), 'node_modules')]
 				}
 			],
 			'stylus',
 			'less'
 		]
-	};
-};
+	}
+}

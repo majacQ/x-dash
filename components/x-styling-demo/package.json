@@ -6,23 +6,29 @@
   "main": "dist/Button.cjs.js",
   "browser": "dist/Button.es5.js",
   "module": "dist/Button.esm.js",
-  "style": "dist/Button.css",
+  "style": "src/Button.css",
   "private": true,
   "scripts": {
     "build": "node rollup.js",
-    "start": "node rollup.js --watch"
+    "start": "node rollup.js --watch",
+    "preinstall": "[ \"$INIT_CWD\" != \"$PWD\" ] || npm_config_yes=true npx check-engine"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@financial-times/x-rollup": "file:../../packages/x-rollup"
+    "@financial-times/x-rollup": "file:../../packages/x-rollup",
+    "check-engine": "^1.10.1"
   },
   "dependencies": {
     "@financial-times/x-engine": "file:../../packages/x-engine",
     "classnames": "^2.2.6"
   },
   "engines": {
-    "node": ">= 6.0.0"
+    "node": "14.x || 16.x",
+    "npm": "7.x || 8.x"
+  },
+  "volta": {
+    "extends": "../../package.json"
   }
 }

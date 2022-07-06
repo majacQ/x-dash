@@ -1,4 +1,4 @@
-If this is your first `x-dash` pull request please familiarise yourself with the [contribution guide](https://github.com/Financial-Times/x-dash/blob/master/contribution.md) before submitting.
+If this is your first `x-dash` pull request please familiarise yourself with the [contribution guide](https://github.com/Financial-Times/x-dash/blob/HEAD/contribution.md) before submitting.
 
 ## If you're creating a component:
 
@@ -13,6 +13,7 @@ If this is your first `x-dash` pull request please familiarise yourself with the
 
 - Discuss features first
 - Update the documentation
+- **Must** be tested in FT.com and Apps before merge
 - No hacks, experiments or temporary workarounds
 - Reviewers are empowered to say no
 - Reference other issues

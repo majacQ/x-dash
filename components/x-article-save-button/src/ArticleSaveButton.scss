@@ -1,0 +1,51 @@
+$system-code: 'github:Financial-Times/x-dash' !default;
+
+@import '@financial-times/o-icons/main';
+@import '@financial-times/o-colors/main';
+@import '@financial-times/o-typography/main';
+
+$icon-size: 38px;
+
+@mixin background-icon($name, $color) {
+	@include oIconsContent(
+		$icon-name: $name,
+		$color: oColorsByName($color),
+		$size: $icon-size,
+		$iconset-version: 1,
+		$include-base-styles: false
+	);
+	display: block;
+	margin-bottom: -5px;
+}
+
+.x-article-save-button {
+	display: inline-block;
+}
+
+.x-article-save-button__button {
+	@include oTypographySans($scale: -2);
+	border: 0;
+	width: $icon-size;
+	padding: 0;
+	color: oColorsByName('black');
+	background-color: transparent;
+	text-align: center;
+
+	&:focus {
+		outline: none;
+	}
+
+	// Only apply hover state for non-touch-device
+	body:not(:global(.touch-device)) &:not(:focus):hover .x-article-save-button__icon {
+		@include background-icon(bookmark, 'black-50');
+	}
+
+	&[aria-pressed='true'] .x-article-save-button__icon {
+		@include background-icon(bookmark, 'claret');
+	}
+}
+
+.x-article-save-button__icon {
+	@include oIconsContentBaseStyles();
+	@include background-icon(bookmark-outline, 'black');
+}

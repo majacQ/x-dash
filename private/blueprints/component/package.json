@@ -22,9 +22,9 @@
     "type" : "git",
     "url" : "https://github.com/Financial-Times/x-dash.git"
   },
-  "homepage": "https://github.com/Financial-Times/x-dash/tree/master/components/{{packageName}}",
+  "homepage": "https://github.com/Financial-Times/x-dash/tree/HEAD/components/{{packageName}}",
   "engines": {
-    "node": ">= 6.0.0"
+    "node": "12.x"
   },
   "publishConfig": {
     "access": "public"

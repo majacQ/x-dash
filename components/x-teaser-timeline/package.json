@@ -1,0 +1,55 @@
+{
+  "name": "@financial-times/x-teaser-timeline",
+  "version": "0.0.0",
+  "description": "Display a list of teasers grouped by day and/or last visit time",
+  "main": "dist/TeaserTimeline.cjs.js",
+  "module": "dist/TeaserTimeline.esm.js",
+  "browser": "dist/TeaserTimeline.es5.js",
+  "style": "src/TeaserTimeline.scss",
+  "types": "typings/x-teaser-timeline.d.ts",
+  "scripts": {
+    "build": "node rollup.js",
+    "start": "node rollup.js --watch",
+    "preinstall": "[ \"$INIT_CWD\" != \"$PWD\" ] || npm_config_yes=true npx check-engine"
+  },
+  "keywords": [
+    "x-dash"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@financial-times/x-article-save-button": "file:../x-article-save-button",
+    "@financial-times/x-engine": "file:../../packages/x-engine",
+    "@financial-times/x-teaser": "file:../x-teaser",
+    "date-fns": "^1.29.0"
+  },
+  "devDependencies": {
+    "@financial-times/o-colors": "^6.4.2",
+    "@financial-times/o-grid": "^6.1.5",
+    "@financial-times/o-typography": "^7.2.2",
+    "@financial-times/x-rollup": "file:../../packages/x-rollup",
+    "@financial-times/x-test-utils": "file:../../packages/x-test-utils",
+    "check-engine": "^1.10.1",
+    "sass": "^1.49.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Financial-Times/x-dash.git"
+  },
+  "homepage": "https://github.com/Financial-Times/x-dash/tree/HEAD/components/x-teaser-timeline",
+  "engines": {
+    "node": "14.x || 16.x",
+    "npm": "7.x || 8.x"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "volta": {
+    "extends": "../../package.json"
+  },
+  "peerDependencies": {
+    "@financial-times/o-colors": "^6.4.2",
+    "@financial-times/o-grid": "^6.1.5",
+    "@financial-times/o-typography": "^7.2.2"
+  }
+}

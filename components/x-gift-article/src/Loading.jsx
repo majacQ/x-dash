@@ -1,8 +1,7 @@
-import { h } from '@financial-times/x-engine';
-import styles from './GiftArticle.css';
+import { h } from '@financial-times/x-engine'
 
 export default () => (
-	<div className={ styles['loading-spinner__container'] }>
-		<div className="o-loading o-loading--dark o-loading--large"></div>
+	<div className="x-gift-article-loading">
+		<div className="x-gift-article-loading__spinner" />
 	</div>
-);
+)

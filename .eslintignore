@@ -1,9 +1,10 @@
+**/*.ts
 **/coverage/**
 **/node_modules/**
-**/bower_components/**
 **/dist/**
 **/vendor/**
 **/public/**
 **/public-prod/**
 **/blueprints/**
-tools/x-docs/static/**
+web/static/**
+/e2e/**
