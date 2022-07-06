@@ -22,6 +22,19 @@
     "@financial-times/x-increment": "file:../../components/x-increment",
     "@financial-times/x-styling-demo": "file:../../components/x-styling-demo",
     "@financial-times/x-teaser": "file:../../components/x-teaser",
+  <<<<<<< x-topper
+    "@financial-times/x-topper": "file:../../components/x-topper",
+    "@storybook/addon-knobs": "^3.4.4",
+    "@storybook/addon-viewport": "^3.4.4",
+    "@storybook/addons": "^3.4.4",
+    "@storybook/cli": "^3.4.4",
+    "@storybook/react": "^3.4.4",
+    "camel-case": "^3.0.0",
+    "copy-webpack-plugin": "^4.5.1",
+    "raw-loader": "^0.5.1",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
+  =======
     "@storybook/addon-knobs": "^4.0.4",
     "@storybook/addon-viewport": "^4.0.4",
     "@storybook/addons": "^4.0.4",
@@ -31,6 +44,7 @@
     "copy-webpack-plugin": "^4.6.0",
     "react": "^16.3.0",
     "react-dom": "^16.3.0",
+  >>>>>>> x-audio-load
     "react-helmet": "^5.2.0",
     "style-loader": "^0.23.0",
     "write-file-webpack-plugin": "^4.4.0"
