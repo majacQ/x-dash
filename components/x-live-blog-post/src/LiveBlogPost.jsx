@@ -16,7 +16,6 @@ function BackToTop({ backToTop }) {
 		return (
 			<a
 				href={backToTop.includes('#') ? backToTop : `#${backToTop}`}
-				aria-labelledby="Back to top"
 				className="x-live-blog-post-controls__back-to-top-link"
 			>
 				Back to top
@@ -26,11 +25,7 @@ function BackToTop({ backToTop }) {
 
 	if (typeof backToTop === 'function') {
 		return (
-			<button
-				onClick={backToTop}
-				aria-labelledby="Back to top"
-				className="x-live-blog-post-controls__back-to-top-button"
-			>
+			<button onClick={backToTop} className="x-live-blog-post-controls__back-to-top-button">
 				Back to top
 			</button>
 		)
@@ -42,7 +37,9 @@ const LiveBlogPost = ({
 	postId, // Remove once wordpress is no longer in use
 	title,
 	content, // Remove once wordpress is no longer in use
-	bodyHTML,
+	bodyHTML, //ElasticSearch
+	body, // cp-content-pipeline
+	renderRichText: RichText,
 	publishedTimestamp, // Remove once wordpress is no longer in use
 	publishedDate,
 	isBreakingNews, // Remove once wordpress is no longer in use
@@ -55,6 +52,33 @@ const LiveBlogPost = ({
 }) => {
 	const showBreakingNewsLabel = standout.breakingNews || isBreakingNews
 
+	let postBody, postByline
+
+	if (body && 'structured' in body && RichText) {
+		// Content comes from cp-content-pipeline-api
+		postBody = (
+			<div className="x-live-blog-post__body n-content-body article--body">
+				<RichText structuredContent={body.structured} />
+			</div>
+		)
+	} else {
+		// Content comes from next-es or wordpress
+		postBody = (
+			<div
+				className="x-live-blog-post__body n-content-body article--body"
+				dangerouslySetInnerHTML={{ __html: bodyHTML || content }}
+			/>
+		)
+	}
+	if (byline && typeof byline === 'object' && 'tree' in byline && RichText) {
+		postByline = (
+			<p className="x-live-blog-post__byline">
+				<RichText structuredContent={byline} />
+			</p>
+		)
+	} else if (typeof byline === 'string') {
+		postByline = <p className="x-live-blog-post__byline">{byline}</p>
+	}
 	return (
 		<article
 			className="x-live-blog-post"
@@ -67,11 +91,8 @@ const LiveBlogPost = ({
 			</div>
 			{showBreakingNewsLabel && <div className="x-live-blog-post__breaking-news">Breaking news</div>}
 			{title && <h2 className="x-live-blog-post__title">{title}</h2>}
-			{byline && <p className="x-live-blog-post__byline">{byline}</p>}
-			<div
-				className="x-live-blog-post__body n-content-body article--body"
-				dangerouslySetInnerHTML={{ __html: bodyHTML || content }}
-			/>
+			{postByline}
+			{postBody}
 			<div className="x-live-blog-post__controls">
 				{showShareButtons && <ShareButtons postId={id || postId} articleUrl={articleUrl} title={title} />}
 				<BackToTop backToTop={backToTop} />

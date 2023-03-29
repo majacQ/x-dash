@@ -1,5 +1,6 @@
 const { h } = require('@financial-times/x-engine')
 const { mount } = require('@financial-times/x-test-utils/enzyme')
+const { RichText } = require('@financial-times/cp-content-pipeline-ui')
 
 import { LiveBlogPost } from '../LiveBlogPost'
 
@@ -45,6 +46,58 @@ const regularPostSpark = {
 	isBreakingNews: false,
 	articleUrl: 'Https://www.ft.com',
 	showShareButtons: true
+}
+
+const regularPostContentPipeline = {
+	id: '12345',
+	title: 'Test title',
+	byline: {
+		tree: {
+			type: 'root',
+			children: [
+				{
+					type: 'element',
+					tagName: 'AuthorLink',
+					properties: {
+						href: 'https://www.ft.com/stream/uuid/533620c9-ef05-4d69-8e1f-a338fba24ee5'
+					},
+					children: [
+						{
+							type: 'text',
+							value: 'Joshua Franklin'
+						}
+					]
+				},
+				{
+					type: 'text',
+					value: ' in New York'
+				}
+			]
+		}
+	},
+	body: {
+		structured: {
+			tree: {
+				type: 'root',
+				children: [
+					{
+						type: 'element',
+						tagName: 'Paragraph',
+						children: [
+							{
+								type: 'text',
+								value: 'structured live blog body'
+							}
+						]
+					}
+				]
+			}
+		}
+	},
+	publishedDate: new Date().toISOString(),
+	articleUrl: 'Https://www.ft.com',
+	showShareButtons: true,
+	renderRichText: RichText
 }
 
 const backToTopPostSpark = {
@@ -182,6 +235,31 @@ describe('x-live-blog-post', () => {
 			const liveBlogPost = mount(<LiveBlogPost {...regularPostWordpress} />)
 
 			expect(liveBlogPost.html()).toContain('<p><i>Test body</i></p>')
+		})
+	})
+
+	describe('cp-content-pipeline-api', () => {
+		it('renders the title', () => {
+			const liveBlogPost = mount(<LiveBlogPost {...regularPostContentPipeline} />)
+			expect(liveBlogPost.html()).toContain('Test title')
+		})
+
+		it('renders the byline', () => {
+			const liveBlogPost = mount(<LiveBlogPost {...regularPostContentPipeline} />)
+			expect(liveBlogPost.html()).toContain('Joshua Franklin</a> in New York</p>')
+		})
+
+		it('renders the body', () => {
+			const liveBlogPost = mount(<LiveBlogPost {...regularPostContentPipeline} />)
+			expect(liveBlogPost.html()).toContain('class="x-live-blog-post__body')
+			expect(liveBlogPost.html()).toContain('<p>structured live blog body</p>')
+		})
+
+		it('handles posts without bylines', () => {
+			const postWithoutByline = { ...regularPostContentPipeline, byline: null }
+			const liveBlogPost = mount(<LiveBlogPost {...postWithoutByline} />)
+			expect(liveBlogPost.html()).toContain('class="x-live-blog-post__body')
+			expect(liveBlogPost.html()).toContain('<p>structured live blog body</p>')
 		})
 	})
 

@@ -8,10 +8,10 @@
 
 x-dash is new shared front-end components for FT.com and the FT Apps. A detailed introduction is available in [Google Slides].
 
-Check out the [getting started] guide to begin hacking on x-dash.
+Check out the [x-dash wiki] to begin hacking on x-dash.
 
 [Google Slides]: https://docs.google.com/presentation/d/1Z8mGsv4JU2TafNPIHw2RcejoNp7AN_v4LfCCGC7qrgw/edit?usp=sharing
-[getting started]: https://financial-times.github.io/x-dash/docs/get-started/installation
+[x-dash wiki]: https://github.com/Financial-Times/x-dash/wiki/What-is-x-dash
 
 ## How is that not Origami?
 
@@ -27,8 +27,8 @@ To get started with x-dash, you'll need to make sure you have the following soft
 
 1. [Git](https://git-scm.com/)
 2. [Make](https://www.gnu.org/software/make/)
-3. [Node.js](https://nodejs.org/en/) (version 12)
-4. [npm](http://npmjs.com/)
+3. [Node.js](https://nodejs.org/en/) (versions 14 or 16)
+4. [npm](http://npmjs.com/) (versions 7 or 8)
 
 Please note that x-dash has only been tested in Mac and Linux environments. If you are on a Mac you may find it easiest to install the [Command Line Tools](https://developer.apple.com/download/more/) package which includes Git and Make.
 

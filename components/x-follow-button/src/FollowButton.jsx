@@ -10,9 +10,10 @@ export const FollowButton = (props) => {
 		csrfToken,
 		followPlusDigestEmail,
 		onSubmit,
-		variant
+		variant = 'standard'
 	} = props
-	const VARIANTS = ['standard', 'inverse', 'opinion', 'monochrome']
+	// 'standard' style is applied by `.x-follow-button` class (default)
+	const VARIANTS = ['inverse', 'opinion', 'alphaville', 'monochrome', 'inverse-monochrome']
 
 	const getFormAction = () => {
 		if (followPlusDigestEmail) {
@@ -33,7 +34,7 @@ export const FollowButton = (props) => {
 	}
 
 	const getAccessibleText = () =>
-		isFollowed ? `Remove ${conceptName} from myFT` : `Add ${conceptName} to myFT`
+		isFollowed ? `Added ${conceptName} to myFT: click to remove` : `Add to myFT: ${conceptName}`
 
 	return (
 		<form
